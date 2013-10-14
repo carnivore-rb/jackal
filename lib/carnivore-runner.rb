@@ -1,0 +1,1 @@
+require 'carnivore-runner/version'
