@@ -1,6 +1,6 @@
 require 'carnivore/callback'
 
-module CarnivoreRunner
+module Jackal
   class Callback < Carnivore::Callback
 
     def new_payload(payload)

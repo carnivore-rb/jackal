@@ -1,7 +1,7 @@
 require 'carnivore'
-require 'carnivore-runner/cli'
+require 'jackal/cli'
 
-cli = CarnivoreRunner::Cli.new
+cli = Jackal::Cli.new
 cli.parse_options
 Carnivore::Config.configure(cli.config)
 Carnivore::Config.auto_symbolize(true)
@@ -14,7 +14,7 @@ begin
         :args => opts[:args].merge(:name => name)
       )
       Carnivore::Config.get(:callbacks, name).each do |klass_name|
-        klass = CarnivoreRunner.const_get(klass_name)
+        klass = Jackal.const_get(klass_name)
         source.add_callback(klass_name, klass)
       end
     end

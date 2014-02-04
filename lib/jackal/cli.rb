@@ -1,6 +1,6 @@
 require 'mixlib/cli'
 
-module CarnivoreRunner
+module Jackal
   class Cli
     include Mixlib::CLI
 

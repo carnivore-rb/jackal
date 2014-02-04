@@ -1,3 +1,3 @@
-# Carnivore Runner
+# Jackal
 
 Run your carnivores
