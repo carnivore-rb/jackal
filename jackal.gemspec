@@ -9,8 +9,9 @@ Gem::Specification.new do |s|
   s.homepage = 'https://github.com/carnivore-rb/jackal'
   s.description = 'Message processing helper'
   s.require_path = 'lib'
+  s.license = 'Apache 2.0'
   s.add_dependency 'carnivore'
   s.add_dependency 'mixlib-cli'
-  s.files = Dir['lib/**/*'] + %w(jackal.gemspec README.md CHANGELOG.md)
+  s.files = Dir['lib/**/*'] + %w(jackal.gemspec README.md CHANGELOG.md CONTRIBUTING.md LICENSE)
   s.executables << 'jackal'
 end
