@@ -11,26 +11,29 @@ Carnivore::Config.auto_symbolize(true)
 end
 
 begin
-  Carnivore::Utils.symbolize_hash(Carnivore::Config.hash_dup).each do |key, opts|
-    next if key == :jackal || !opts.is_a?(Hash)
-    Carnivore::Utils.info "Processing: #{opts.inspect}"
-    Carnivore.configure do
-      opts.fetch(:sources, {}).each do |kind, source_args|
-        source = Carnivore::Source.build(
-          :type => source_args[:type].to_sym,
-          :args => source_args.fetch(:args, {}).merge(:name => "#{key}_#{kind}")
-        )
-        Carnivore::Utils.info "Initialized new source: #{key}_#{kind}"
-        if(kind == :input)
-          opts.fetch(:callbacks, []).each do |klass_name|
-            klass = klass_name.split('::').inject(
-              Object.const_get(
-                key.to_s.split('_').map(&:capitalize).join
-              )
-            ) do |memo, name|
-              memo.const_get(name)
+  Carnivore::Utils.symbolize_hash(Carnivore::Config.hash_dup).each do |namespace, args|
+    next unless args.is_a?(Hash)
+    opts.each do |key, opts|
+      next unless opts.is_a?(Hash) && opts[:sources]
+      Carnivore::Utils.info "Processing: #{opts.inspect}"
+      Carnivore.configure do
+        opts.fetch(:sources, {}).each do |kind, source_args|
+          source = Carnivore::Source.build(
+            :type => source_args[:type].to_sym,
+            :args => source_args.fetch(:args, {}).merge(:name => "#{namespace}_#{key}_#{kind}")
+          )
+          Carnivore::Utils.info "Initialized new source: #{namespace}_#{key}_#{kind}"
+          if(kind == :input)
+            opts.fetch(:callbacks, []).each do |klass_name|
+              klass = klass_name.split('::').inject(
+                Object.const_get(
+                  key.to_s.split('_').map(&:capitalize).join
+                )
+              ) do |memo, name|
+                memo.const_get(name)
+              end
+              source.add_callback(klass_name, klass)
             end
-            source.add_callback(klass_name, klass)
           end
         end
       end

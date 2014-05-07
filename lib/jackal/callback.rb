@@ -3,8 +3,18 @@ require 'jackal'
 module Jackal
   class Callback < Carnivore::Callback
 
-    def config_key
-      self.class.name.split('::').first.gsub(/(?<![A-Z])([A-Z])/, '_\1').sub(/^_/, '').downcase
+    def config_path
+      self.class.name.split('::')[0,2].map do |string|
+        string.gsub(/(?<![A-Z])([A-Z])/, '_\1').sub(/^_/, '').downcase
+      end
+    end
+
+    def source_prefix
+      config_path.join('_')
+    end
+
+    def config
+      Carnviore::Config.get(*config_path)
     end
 
     def new_payload(payload)
@@ -31,7 +41,7 @@ module Jackal
     def failed(payload, message, reason='No reason provided')
       error "Processing of #{message} failed! Reason: #{reason}"
       message.confirm!
-      destination = "#{config_key}_error"
+      destination = "#{source_prefix}_error"
       source = Carnivore::Supervisor.supervisor[destination]
       error "Sending #{message} to error handler: #{source}"
       source.transmit(payload)
@@ -44,7 +54,7 @@ module Jackal
     end
 
     def forward(payload)
-      destination = "#{config_key}_output"
+      destination = "#{source_prefix}_output"
       source = Carnivore::Supervisor.supervisor[destination]
       info "Forwarding payload to output destination... (#{source})"
       debug "Forwarded payload: #{payload.inspect}"
