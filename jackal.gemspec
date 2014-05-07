@@ -14,4 +14,5 @@ Gem::Specification.new do |s|
   s.add_dependency 'mixlib-cli'
   s.files = Dir['lib/**/*'] + %w(jackal.gemspec README.md CHANGELOG.md CONTRIBUTING.md LICENSE)
   s.executables << 'jackal'
+  s.executables << 'jackal-test'
 end

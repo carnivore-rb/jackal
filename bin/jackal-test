@@ -1,0 +1,5 @@
+#!/usr/bin/env ruby
+# -*- mode: ruby -*-
+# -*- encoding: utf-8 -*-
+
+require 'jackal/utils/spec/loader'
