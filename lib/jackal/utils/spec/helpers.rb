@@ -37,3 +37,13 @@ def payload_for(style, args={})
     raise "Requested payload path for test does not exist: #{File.expand_path(path)}"
   end
 end
+
+def run_setup(config)
+  path = File.join(Dir.pwd, 'test/specs/config', "#{config}.json")
+  Carnivore::Config.configure(:config_path => path)
+  runner = Thread.new do
+    require 'jackal/loader'
+  end
+  source_wait(:setup)
+  runner
+end
