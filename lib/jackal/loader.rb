@@ -1,9 +1,12 @@
 require 'carnivore'
 require 'jackal'
 
-cli = Jackal::Cli.new
-cli.parse_options
-Carnivore::Config.configure(cli.config)
+unless(ENV['JACKAL_TESTING_MODE'])
+  cli = Jackal::Cli.new
+  cli.parse_options
+  Carnivore::Config.configure(cli.config)
+end
+
 Carnivore::Config.auto_symbolize(true)
 
 (Carnivore::Config.get(:jackal, :require) || []).each do |path|
@@ -13,7 +16,7 @@ end
 begin
   Carnivore::Utils.symbolize_hash(Carnivore::Config.hash_dup).each do |namespace, args|
     next unless args.is_a?(Hash)
-    opts.each do |key, opts|
+    args.each do |key, opts|
       next unless opts.is_a?(Hash) && opts[:sources]
       Carnivore::Utils.info "Processing: #{opts.inspect}"
       Carnivore.configure do
@@ -25,11 +28,7 @@ begin
           Carnivore::Utils.info "Initialized new source: #{namespace}_#{key}_#{kind}"
           if(kind == :input)
             opts.fetch(:callbacks, []).each do |klass_name|
-              klass = klass_name.split('::').inject(
-                Object.const_get(
-                  key.to_s.split('_').map(&:capitalize).join
-                )
-              ) do |memo, name|
+              klass = klass_name.split('::').inject(Object) do |memo, name|
                 memo.const_get(name)
               end
               source.add_callback(klass_name, klass)
