@@ -16,7 +16,7 @@ module Jackal
     end
 
     def config
-      Carnviore::Config.get(*config_path)
+      Carnviore::Config.get(*config_path.push(:config))
     end
 
     # message:: Original message
