@@ -3,6 +3,8 @@ require 'jackal'
 module Jackal
   class Callback < Carnivore::Callback
 
+    include Utils::Payload
+
     def config_path
       self.class.name.split('::')[0,2].map do |string|
         string.gsub(/(?<![A-Z])([A-Z])/, '_\1').sub(/^_/, '').downcase
@@ -15,13 +17,6 @@ module Jackal
 
     def config
       Carnviore::Config.get(*config_path)
-    end
-
-    def new_payload(payload)
-      Smash.new(
-        :id => Celluloid.uuid,
-        :data => payload
-      )
     end
 
     # message:: Original message
