@@ -10,14 +10,7 @@ end
 describe 'Jackal::Callback' do
 
   before do
-    cwd = File.dirname(__FILE__)
-    Carnivore::Config.configure(
-      :config_path => File.join(cwd, 'config/test.json')
-    )
-    @runner = Thread.new do
-      require 'jackal/loader'
-    end
-    source_wait(:setup)
+    @runner = run_setup(:test)
   end
 
   after do
