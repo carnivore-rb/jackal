@@ -1,0 +1,23 @@
+{
+  "jackal": {
+    "require": []
+  },
+  "test_namespace": {
+    "worker": {
+      "sources": {
+        "input": {
+          "type": "spec"
+        },
+        "output": {
+          "type": "spec"
+        }
+      },
+      "callbacks": [
+        "TestNamespace::Worker::MyCallback"
+      ],
+      "config": {
+        "fubar": true
+      }
+    }
+  }
+}
