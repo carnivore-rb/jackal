@@ -7,7 +7,7 @@ module TestNamespace
   end
 end
 
-describe 'Jackal::Callback' do
+describe Jackal::Callback do
 
   before do
     @runner = run_setup(:test)
