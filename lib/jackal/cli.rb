@@ -1,6 +1,7 @@
 require 'mixlib/cli'
 
 module Jackal
+  # CLI interface
   class Cli
     include Mixlib::CLI
 
