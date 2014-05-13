@@ -78,9 +78,14 @@ module Jackal
     def forward(payload)
       destination = "#{source_prefix}_output"
       source = Carnivore::Supervisor.supervisor[destination]
-      info "Forwarding payload to output destination... (#{source})"
-      debug "Forwarded payload: #{payload.inspect}"
-      source.transmit(payload)
+      if(source)
+        info "Forwarding payload to output destination... (#{source})"
+        debug "Forwarded payload: #{payload.inspect}"
+        source.transmit(payload)
+      else
+        warn "No destination source found for generated source path: #{destination}"
+        info "Processing of message #{message} has completed. Message now discarded."
+      end
     end
 
     # Mark job as completed
