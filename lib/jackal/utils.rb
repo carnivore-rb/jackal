@@ -9,7 +9,6 @@ module Jackal
     # Module utilities
     module Payload
 
-
       # Generate a new payload
       #
       # @param name [String]
