@@ -5,23 +5,9 @@ module Jackal
   class Callback < Carnivore::Callback
 
     include Utils::Payload
-
-    # @return [Array] key path in configuration
-    def config_path
-      self.class.name.split('::')[0,2].map do |string|
-        string.gsub(/(?<![A-Z])([A-Z])/, '_\1').sub(/^_/, '').downcase
-      end
-    end
-
-    # @return [String] prefix of source for this callback
-    def source_prefix
-      config_path.join('_')
-    end
-
-    # @return [Hash] configuration
-    def config
-      Carnviore::Config.get(*config_path.push(:config)) || Smash.new
-    end
+    include Utils::Config
+    # @!parse include Jackal::Utils::Payload
+    # @!parse include Jackal::Utils::Config
 
     # Validity of message
     #
