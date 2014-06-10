@@ -44,8 +44,13 @@ module Jackal
       message.confirm!
       destination = "#{source_prefix}_error"
       source = Carnivore::Supervisor.supervisor[destination]
-      error "Sending #{message} to error handler: #{source}"
-      source.transmit(payload)
+      if(source)
+        error "Sending #{message} to error handler: #{source}"
+        source.transmit(payload)
+      else
+        error "No error source found for generated source path: #{destination}"
+        info "Processing of message #{message} has completed. Message now discarded."
+      end
     end
 
     # Mark payload complete and forward
