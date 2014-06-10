@@ -1,6 +1,6 @@
 require 'jackal'
 
-module Jenkins
+module Jackal
   module Utils
     module Config
 
@@ -18,7 +18,7 @@ module Jenkins
 
       # @return [Hash] configuration
       def config
-        Carnviore::Config.get(*config_path.push(:config)) || Smash.new
+        Carnivore::Config.get(*config_path.push(:config)) || Smash.new
       end
 
       # Generation destination key based on direction
@@ -26,7 +26,7 @@ module Jenkins
       # @param direction [Symbol, String]
       # @return [Symbol]
       def destination(direction = :output)
-        [config_path, direction].map(&:to_s).join('_').to_sym
+        [source_prefix, direction].map(&:to_s).join('_').to_sym
       end
 
     end
