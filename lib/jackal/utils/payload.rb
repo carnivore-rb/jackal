@@ -24,7 +24,8 @@ module Jackal
       # @param message [Carnivore::Message]
       # @return [Smash]
       def unpack(message)
-        Smash.new(message[:message])
+        msg = message[:message].to_smash
+        msg.fetch(:payload, msg)
       end
 
     end
