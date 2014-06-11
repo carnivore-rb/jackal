@@ -1,5 +1,5 @@
 module Jackal
   class Version < Gem::Version
   end
-  VERSION = Version.new('0.1.3')
+  VERSION = Version.new('0.1.4')
 end
