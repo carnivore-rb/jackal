@@ -75,7 +75,7 @@ module Jackal
         source.transmit(payload)
       else
         warn "No destination source found for generated source path: #{destination}"
-        info "Processing of message #{message} has completed. Message now discarded."
+        info "Processing of message has completed. Message now discarded."
       end
     end
 
