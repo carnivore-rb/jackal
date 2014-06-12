@@ -1,3 +1,6 @@
+# v0.1.6
+* Include default source for HTTP endpoints if used and configuration enables
+
 # v0.1.4
 * Add HTTP point builder api util
 * Fetch payload from message if available
