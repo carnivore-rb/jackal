@@ -1,3 +1,7 @@
+# v0.1.8
+* Allow extra arguments to be passed through new_payload
+* Spec helper updates
+
 # v0.1.6
 * Include default source for HTTP endpoints if used and configuration enables
 
