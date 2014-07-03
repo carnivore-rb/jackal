@@ -10,8 +10,9 @@ module Jackal
       #
       # @param name [String]
       # @param payload [Hash]
+      # @param args [Object] extra arguments
       # @return [Smash]
-      def new_payload(name, payload)
+      def new_payload(name, payload, *args)
         Smash.new(
           :name => name,
           :id => Celluloid.uuid,
