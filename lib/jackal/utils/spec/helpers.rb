@@ -16,9 +16,19 @@ ENV.each do |key, value|
   end
 end
 
+# Fetch test payload and create new payload
+#
+# @param style [String, Symbol] name of payload
+# @param args [Hash]
+# @option args [TrueClass, FalseClass] :raw return loaded payload only
+# @option args [String, Symbol] :nest place loaded payload within key namespace in hash
+# @return [Hash] new payload
+# @note `style` is name of test payload without .json extension. Will
+# search 'test/specs/payload' from CWD first, then fallback to
+# 'payloads' directory within the directory of this file
 def payload_for(style, args={})
   file = "#{style}.json"
-  path = [File.join(Dir.pwd, 'test/specs/payloads'), File.join(File.dirname(__FILE__), 'payloads')].map do |dir|
+  path = [File.join(Dir.pwd, 'test/specs/payloads'), Jackal::Utils::Spec.payload_storage].flatten.compact.map do |dir|
     if(File.exists?(full_path = File.join(dir, file)))
       full_path
     end
@@ -34,10 +44,15 @@ def payload_for(style, args={})
       end
     end
   else
-    raise "Requested payload path for test does not exist: #{File.expand_path(path)}"
+    raise "Requested payload path for test does not exist: #{path ? File.expand_path(path) : 'no path discovered'}"
   end
 end
 
+# Configure using custom configuration JSON within config
+# directory of current test
+#
+# @param config [String, Symbol] name of configuration file without json extension
+# @return [Thread] thread with running source
 def run_setup(config)
   path = File.join(Dir.pwd, 'test/specs/config', "#{config}.json")
   Carnivore::Config.configure(:config_path => path)

@@ -18,6 +18,16 @@ module Jackal
           @forwarded << payload
         end
 
+        class << self
+          # Init data store for internal message capture
+          def extended(klass)
+            klass.instance_eval do
+              @forwarded = []
+            end
+          end
+          alias_method :included, :extended
+        end
+
       end
     end
   end
