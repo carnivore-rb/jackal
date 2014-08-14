@@ -9,6 +9,10 @@ end
 
 Carnivore::Config.auto_symbolize(true)
 
+Celluloid.logger.level = Celluloid.logger.class.const_get(
+  (Carnivore::Config.get(:verbosity) || :debug).to_s.upcase
+)
+
 (Carnivore::Config.get(:jackal, :require) || []).each do |path|
   require path
 end

@@ -12,5 +12,11 @@ module Jackal
       :description => 'Path to configuration file'
     )
 
+    option(:verbosity,
+      :short => '-V VERBOSITY',
+      :long => '--verbosity VERBOSITY',
+      :description => 'Log verbosity (debug info warn error)'
+    )
+
   end
 end
