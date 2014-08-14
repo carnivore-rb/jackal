@@ -1,3 +1,6 @@
+# v0.1.10
+* Add flag to control verbosity
+
 # v0.1.8
 * Allow extra arguments to be passed through new_payload
 * Spec helper updates
