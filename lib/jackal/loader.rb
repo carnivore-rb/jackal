@@ -22,14 +22,14 @@ begin
     next unless args.is_a?(Hash)
     args.each do |key, opts|
       next unless opts.is_a?(Hash) && opts[:sources]
-      Carnivore::Utils.info "Processing: #{opts.inspect}"
+      Carnivore::Utils.debug "Processing: #{opts.inspect}"
       Carnivore.configure do
         opts.fetch(:sources, {}).each do |kind, source_args|
           source = Carnivore::Source.build(
             :type => source_args[:type].to_sym,
             :args => source_args.fetch(:args, {}).merge(:name => "#{namespace}_#{key}_#{kind}")
           )
-          Carnivore::Utils.info "Initialized new source: #{namespace}_#{key}_#{kind}"
+          Carnivore::Utils.info "Registered new source: #{namespace}_#{key}_#{kind}"
           if(kind == :input)
             opts.fetch(:callbacks, []).each do |klass_name|
               klass = klass_name.split('::').inject(Object) do |memo, name|
