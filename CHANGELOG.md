@@ -1,3 +1,7 @@
+# v0.1.12
+* Only output source configuration in debug mode
+* Catch unprocessed messages and remove from bus
+
 # v0.1.10
 * Add flag to control verbosity
 
