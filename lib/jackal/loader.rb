@@ -36,6 +36,12 @@ begin
                 memo.const_get(name)
               end
               source.add_callback(klass_name, klass)
+              # If no callbacks match message, ensure message is
+              # confirmed from the source and logged as error
+              source.orphan_callback do |message|
+                error "No callbacks matched message. Failed to process. Removed from bus. (#{message})"
+                message.confirm!
+              end
             end
           end
         end
