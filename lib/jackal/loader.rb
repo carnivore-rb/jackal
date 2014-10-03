@@ -27,7 +27,11 @@ begin
         opts.fetch(:sources, {}).each do |kind, source_args|
           source = Carnivore::Source.build(
             :type => source_args[:type].to_sym,
-            :args => source_args.fetch(:args, {}).merge(:name => "#{namespace}_#{key}_#{kind}")
+            :args => source_args.fetch(:args, {}).merge(:name => "#{namespace}_#{key}_#{kind}"),
+            :orphan_callback => lambda{|message|
+              error "No callbacks matched message. Failed to process. Removed from bus. (#{message})"
+              message.confirm!
+            }
           )
           Carnivore::Utils.info "Registered new source: #{namespace}_#{key}_#{kind}"
           if(kind == :input)
@@ -36,12 +40,6 @@ begin
                 memo.const_get(name)
               end
               source.add_callback(klass_name, klass)
-              # If no callbacks match message, ensure message is
-              # confirmed from the source and logged as error
-              source.orphan_callback do |message|
-                error "No callbacks matched message. Failed to process. Removed from bus. (#{message})"
-                message.confirm!
-              end
             end
           end
         end
