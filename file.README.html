@@ -6,7 +6,7 @@
 <title>
   File: README
   
-    &mdash; Jackal
+    &mdash; SparkleFormation
   
 </title>
 
@@ -61,110 +61,107 @@
 
     <iframe id="search_frame"></iframe>
 
-    <div id="content"><div id='filecontents'><h1 id="jackal">Jackal</h1>
+    <div id="content"><div id='filecontents'><h1>Jackal</h1>
 
 <p>Run your carnivores.</p>
 
-<h2 id="configuration">Configuration</h2>
+<h2>Configuration</h2>
 
-<p><code>json
-{
-  "jackal": {
-    "require": [
-      "carnivore-http",
-      "fubar-helloer"
+<pre class="code json"><code class="json">{
+  &quot;jackal&quot;: {
+    &quot;require&quot;: [
+      &quot;carnivore-http&quot;,
+      &quot;fubar-helloer&quot;
     ]
   },
-  "fubar": {
-    "helloer": {
-      "sources": {
-        "input": {
+  &quot;fubar&quot;: {
+    &quot;helloer&quot;: {
+      &quot;sources&quot;: {
+        &quot;input&quot;: {
           ...
         },
-        "output": {
+        &quot;output&quot;: {
           ...
         },
-        "error": {
+        &quot;error&quot;: {
           ...
         }
       },
-      "callbacks": [
-        "Fubar::Helloer::SayHello"
+      &quot;callbacks&quot;: [
+        &quot;Fubar::Helloer::SayHello&quot;
       ],
-      "config": {
-        "output_prefix": "Received message: "
+      &quot;config&quot;: {
+        &quot;output_prefix&quot;: &quot;Received message: &quot;
       }
     }
   }
 }
-</code></p>
+</code></pre>
 
 <ul>
-  <li><code>jackal</code> provides subsystem configuration
-    <ul>
-      <li><code>require</code> libraries to load at startup</li>
-    </ul>
-  </li>
-  <li><code>fubar</code> configuration of components (snake cased top level module)
-    <ul>
-      <li><code>helloer</code> configuration of specific component (snake cased second level module)
-        <ul>
-          <li><code>sources</code> configuration for carnivore sources</li>
-          <li><code>callbacks</code> callback class names to initialize and attach to input source</li>
-          <li><code>config</code> configuration hash used by callbacks</li>
-        </ul>
-      </li>
-    </ul>
-  </li>
+<li><code>jackal</code> provides subsystem configuration
+
+<ul>
+<li><code>require</code> libraries to load at startup</li>
+</ul></li>
+<li><code>fubar</code> configuration of components (snake cased top level module)
+
+<ul>
+<li><code>helloer</code> configuration of specific component (snake cased second level module)</li>
+<li><code>sources</code> configuration for carnivore sources</li>
+<li><code>callbacks</code> callback class names to initialize and attach to input source</li>
+<li><code>config</code> configuration hash used by callbacks</li>
+</ul></li>
 </ul>
 
-<h2 id="jackal-callbacks">Jackal Callbacks</h2>
+<h2>Jackal Callbacks</h2>
 
 <p>Jackal callbacks are subclassed Carnivore callbacks adding a bit more structure. The
 general implementation of a Jackal callback:</p>
 
-<p>```ruby
-module Fubar
-  module Helloer
-    class SayHello &lt; Jackal::Callback</p>
+<pre class="code ruby"><code class="ruby"><span class='kw'>module</span> <span class='const'>Fubar</span>
+  <span class='kw'>module</span> <span class='const'>Helloer</span>
+    <span class='kw'>class</span> <span class='const'>SayHello</span> <span class='op'>&lt;</span> <span class='const'>Jackal</span><span class='op'>::</span><span class='const'>Callback</span>
 
-<pre class="code ruby"><code class="ruby">  def valid?(message)
-    super do |payload|
-      payload.get(:data, :helloer, :output)
-    end
-  end
+      <span class='kw'>def</span> <span class='id identifier rubyid_valid?'>valid?</span><span class='lparen'>(</span><span class='id identifier rubyid_message'>message</span><span class='rparen'>)</span>
+        <span class='kw'>super</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_payload'>payload</span><span class='op'>|</span>
+          <span class='id identifier rubyid_payload'>payload</span><span class='period'>.</span><span class='id identifier rubyid_get'>get</span><span class='lparen'>(</span><span class='symbol'>:data</span><span class='comma'>,</span> <span class='symbol'>:helloer</span><span class='comma'>,</span> <span class='symbol'>:output</span><span class='rparen'>)</span>
+        <span class='kw'>end</span>
+      <span class='kw'>end</span>
 
-  def execute(message)
-    failure_wrap(message) do |payload|
-      info config[:output_prefix] + payload.get(:data, :helloer, :output)
-      job_completed(:helloer, payload, message)
-    end
-  end
+      <span class='kw'>def</span> <span class='id identifier rubyid_execute'>execute</span><span class='lparen'>(</span><span class='id identifier rubyid_message'>message</span><span class='rparen'>)</span>
+        <span class='id identifier rubyid_failure_wrap'>failure_wrap</span><span class='lparen'>(</span><span class='id identifier rubyid_message'>message</span><span class='rparen'>)</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_payload'>payload</span><span class='op'>|</span>
+          <span class='id identifier rubyid_info'>info</span> <span class='id identifier rubyid_config'>config</span><span class='lbracket'>[</span><span class='symbol'>:output_prefix</span><span class='rbracket'>]</span> <span class='op'>+</span> <span class='id identifier rubyid_payload'>payload</span><span class='period'>.</span><span class='id identifier rubyid_get'>get</span><span class='lparen'>(</span><span class='symbol'>:data</span><span class='comma'>,</span> <span class='symbol'>:helloer</span><span class='comma'>,</span> <span class='symbol'>:output</span><span class='rparen'>)</span>
+          <span class='id identifier rubyid_job_completed'>job_completed</span><span class='lparen'>(</span><span class='symbol'>:helloer</span><span class='comma'>,</span> <span class='id identifier rubyid_payload'>payload</span><span class='comma'>,</span> <span class='id identifier rubyid_message'>message</span><span class='rparen'>)</span>
+        <span class='kw'>end</span>
+      <span class='kw'>end</span>
 
-end   end end ```
+    <span class='kw'>end</span>
+  <span class='kw'>end</span>
+<span class='kw'>end</span>
 </code></pre>
 
-<h2 id="testing">Testing</h2>
+<h2>Testing</h2>
 
 <p>Jackal provides test helpers building upon the helpers provided by
 Carnivore.</p>
 
-<h3 id="jackal-test">jackal-test</h3>
+<h3>jackal-test</h3>
 
 <p>This executable will load minitest and auto run all files matched
 by the glob: <code>test/specs/*.rb</code>.</p>
 
-<h2 id="info">Info</h2>
+<h2>Info</h2>
 
 <ul>
-  <li>Repository: https://github.com/carnivore-rb/jackal</li>
-  <li>Carnivore: https://github.com/carnivore-rb/carnivore</li>
-  <li>IRC: Freenode @ #carnivore</li>
+<li>Repository: <a href="https://github.com/carnivore-rb/jackal">https://github.com/carnivore-rb/jackal</a></li>
+<li>Carnivore: <a href="https://github.com/carnivore-rb/carnivore">https://github.com/carnivore-rb/carnivore</a></li>
+<li>IRC: Freenode @ #carnivore</li>
 </ul>
 </div></div>
 
     <div id="footer">
-  Generated on Wed Oct 29 06:41:54 2014 by
+  Generated on Wed Oct 29 06:43:37 2014 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.8.7.6 (ruby-2.1.2).
 </div>
