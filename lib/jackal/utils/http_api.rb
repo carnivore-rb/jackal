@@ -24,17 +24,3 @@ class Carnivore::Http::PointBuilder::Endpoint
   # @!parse include Jackal::Utils::Payload
   # @!parse include Jackal::Utils::Config
 end
-
-# Define default source for API if configuration exists
-if(Carnivore::Config.get(:http_hook))
-  Carnivore.configure do
-    Carnivore::Source.build(
-      :type => :http_endpoints,
-      :args => {
-        :name => :http_hook,
-        :bind => Carnivore::Config.get(:http_hook, :bind) || "0.0.0.0",
-        :port => Carnivore::Config.get(:http_hook, :port) || 8989
-      }
-    )
-  end
-end

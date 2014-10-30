@@ -46,7 +46,7 @@ begin
       end
     end
   end
-
+  Jackal::Utils.load_http_hook
   Carnivore.start!
 rescue => e
   $stderr.puts "Unexpected failure encountered: #{e.class}: #{e}"
