@@ -1,3 +1,7 @@
+# v0.1.16
+* Load HTTP hook directly prior to service start
+  * Fixes some issues with spec loads
+
 # v0.1.14
 * Move orphan handlers into source init arg
 
