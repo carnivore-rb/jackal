@@ -36,9 +36,7 @@ begin
           Carnivore::Utils.info "Registered new source: #{namespace}_#{key}_#{kind}"
           if(kind == :input)
             opts.fetch(:callbacks, []).each do |klass_name|
-              klass = klass_name.split('::').inject(Object) do |memo, name|
-                memo.const_get(name)
-              end
+              klass = Utils.constantize(klass_name)
               source.add_callback(klass_name, klass)
             end
           end
