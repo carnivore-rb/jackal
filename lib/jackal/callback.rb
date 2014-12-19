@@ -6,8 +6,25 @@ module Jackal
 
     include Utils::Payload
     include Utils::Config
+    include Utils::Config
     # @!parse include Jackal::Utils::Payload
     # @!parse include Jackal::Utils::Config
+    # @!parse include Jackal::Utils::Constants
+
+    # @return [Array<Formatter>] formatters
+    attr_reader :formatters
+
+    # Create new instance
+    #
+    # @return [self]
+    def initialize(*_)
+      super
+      if(service_config[:formatters])
+        @formatters = service_config[:formatters].map do |klass_name|
+          constantize(klass_name).new
+        end
+      end
+    end
 
     # Validity of message
     #
@@ -86,8 +103,21 @@ module Jackal
     # @param message [Carnivore::Message]
     def job_completed(name, payload, message)
       info "Processing of message #{message} has completed within this component #{name}"
+      if(formatters)
+        apply_formatters!(payload)
+      end
       message.confirm!
       forward(payload)
+    end
+
+    # Apply configured formatters to payload
+    #
+    # @param payload [Smash]
+    # @return [Smash]
+    def apply_formatters!(payload)
+      formatters.each do |formatter|
+        formatter.format(payload)
+      end
     end
 
   end
