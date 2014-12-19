@@ -7,9 +7,11 @@ module Jackal
     autoload :Spec, 'jackal/utils/spec'
     autoload :Payload, 'jackal/utils/payload'
     autoload :Config, 'jackal/utils/config'
+    autoload :Constants, 'jackal/utils/constants'
     autoload :HttpApi, 'jackal/utils/http_api'
 
     extend Payload
+    extend Constants
 
     class << self
 
