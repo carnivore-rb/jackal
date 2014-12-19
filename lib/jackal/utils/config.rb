@@ -16,9 +16,14 @@ module Jackal
         config_path.join('_')
       end
 
+      # @return [Hash] service configuration
+      def service_config
+        Carnivore::Config.get(*config_path) || Smash.new
+      end
+
       # @return [Hash] configuration
       def config
-        Carnivore::Config.get(*config_path.push(:config)) || Smash.new
+        service_config[:config] || Smash.new
       end
 
       # Generation destination key based on direction
