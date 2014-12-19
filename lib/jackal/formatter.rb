@@ -4,6 +4,20 @@ module Jackal
   # Payload formatter
   class Formatter
 
+    class << self
+
+      # Register formatter
+      def inherited(klass)
+        Formatter.descendants.push(klass).uniq!
+      end
+
+      # @return [Array<Class>] registered formatters
+      def descendants
+        @_descendants ||= []
+      end
+
+    end
+
     # @return [String, Symbol]
     SOURCE = nil
     # @return [String, Symbol]
