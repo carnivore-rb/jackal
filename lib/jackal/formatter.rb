@@ -34,6 +34,16 @@ module Jackal
       end
     end
 
+    # @return [Symbol]
+    def source
+      self.class.const_get(:SOURCE).to_sym
+    end
+
+    # @return [Symbol]
+    def destination
+      self.class.const_get(:DESTINATION).to_sym
+    end
+
     # Apply format to payload
     #
     # @param payload [Smash]
