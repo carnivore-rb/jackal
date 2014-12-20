@@ -4,6 +4,11 @@ module Jackal
   module Utils
     module Config
 
+      # @return [Symbol] name of service
+      def service_name(class_name = self.class.name)
+        config_path(class_name).last.to_sym
+      end
+
       # @return [Array] key path in configuration
       def config_path(class_name = self.class.name)
         class_name.split('::')[0,2].map do |string|
