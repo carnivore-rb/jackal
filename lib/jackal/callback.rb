@@ -26,6 +26,14 @@ module Jackal
       end
     end
 
+    # @return [Utils::Process]
+    def process_manager
+      unless(@_process)
+        @_process = Utils::Process.new
+      end
+      @_process
+    end
+
     # Validity of message
     #
     # @param message [Carnivore::Message]
