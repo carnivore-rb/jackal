@@ -21,12 +21,12 @@ module Jackal
         config_path.join('_')
       end
 
-      # @return [Hash] service configuration
+      # @return [Smash] service configuration
       def service_config
         Carnivore::Config.get(*config_path) || Smash.new
       end
 
-      # @return [Hash] configuration
+      # @return [Smash] configuration
       def config
         service_config[:config] || Smash.new
       end
