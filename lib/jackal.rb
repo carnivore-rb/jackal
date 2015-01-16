@@ -6,6 +6,7 @@ module Jackal
   autoload :Error, 'jackal/error'
   autoload :Formatter, 'jackal/formatter'
   autoload :Utils, 'jackal/utils'
+  autoload :Loader, 'jackal/loader'
 end
 
 require 'jackal/version'

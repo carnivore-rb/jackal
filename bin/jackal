@@ -1,3 +1,18 @@
 #!/usr/bin/env ruby
+require 'bogo-cli'
 require 'jackal'
-require 'jackal/loader'
+
+Bogo::Cli::Setup.define do
+
+  on :v, :version, 'Print version' do
+    puts "jackal - Message Pipeline - [Version: #{Jackal::VERSION}]"
+    exit
+  end
+  on :c, :config=, 'Configuration file or directory'
+  on :V, :verbosity=, 'Log verbosity (debug info warn error)'
+  run do |opts, args|
+    Jackal::Loader.run!(opts)
+    exit
+  end
+
+end

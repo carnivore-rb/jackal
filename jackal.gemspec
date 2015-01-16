@@ -11,7 +11,7 @@ Gem::Specification.new do |s|
   s.require_path = 'lib'
   s.license = 'Apache 2.0'
   s.add_dependency 'carnivore', '>= 0.2.6'
-  s.add_dependency 'mixlib-cli'
+  s.add_dependency 'bogo-cli'
   s.add_dependency 'childprocess'
   s.files = Dir['lib/**/*'] + %w(jackal.gemspec README.md CHANGELOG.md CONTRIBUTING.md LICENSE)
   s.executables << 'jackal'
