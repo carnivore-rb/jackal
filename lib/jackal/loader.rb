@@ -5,11 +5,14 @@ module Jackal
   class Loader
     class << self
 
-      # @todo set configs as immutable once available
+      # Run the jackal
+      #
+      # @param opts [Hash]
       def run!(opts)
 
         unless(ENV['JACKAL_TESTING_MODE'])
           Carnivore.configure!(opts[:config])
+          Carnivore::Config.immutable!
         end
 
         Celluloid.logger.level = Celluloid.logger.class.const_get(
