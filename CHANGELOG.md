@@ -1,6 +1,11 @@
+# v0.2.0
+* Add abstract payload formatter
+* Provide common helper method to shell out
+* Remove custom CLI and integrate bogo-cli
+
 # v0.1.16
 * Load HTTP hook directly prior to service start
-  * Fixes some issues with spec loads
+* Fixes some issues with spec loads
 
 # v0.1.14
 * Move orphan handlers into source init arg
