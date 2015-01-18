@@ -10,8 +10,9 @@ Gem::Specification.new do |s|
   s.description = 'Message processing helper'
   s.require_path = 'lib'
   s.license = 'Apache 2.0'
-  s.add_dependency 'carnivore', '>= 0.3.0'
-  s.add_dependency 'bogo-cli'
+  s.add_dependency 'carnivore', '>= 0.3.0', '< 1.0.0'
+  s.add_dependency 'bogo-cli', '~> 0.1'
+  s.add_dependency 'bogo-config', '>= 0.1.6', '< 1.0.0'
   s.add_dependency 'childprocess'
   s.files = Dir['lib/**/*'] + %w(jackal.gemspec README.md CHANGELOG.md CONTRIBUTING.md LICENSE)
   s.executables << 'jackal'
