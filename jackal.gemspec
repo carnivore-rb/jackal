@@ -14,7 +14,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'bogo-cli', '~> 0.1'
   s.add_dependency 'bogo-config', '>= 0.1.6', '< 1.0.0'
   s.add_dependency 'childprocess'
-  s.files = Dir['lib/**/*'] + %w(jackal.gemspec README.md CHANGELOG.md CONTRIBUTING.md LICENSE)
+  s.files = Dir['{lib,bin}/**/**/*'] + %w(jackal.gemspec README.md CHANGELOG.md CONTRIBUTING.md LICENSE)
   s.executables << 'jackal'
   s.executables << 'jackal-test'
 end
