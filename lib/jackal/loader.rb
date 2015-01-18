@@ -10,7 +10,9 @@ module Jackal
       # @param opts [Hash]
       def run!(opts)
 
-        unless(ENV['JACKAL_TESTING_MODE'])
+        if(ENV['JACKAL_TESTING_MODE'] && !opts[:config])
+          Carnivore.configure!(:verify)
+        else
           Carnivore.configure!(opts[:config])
           Carnivore::Config.immutable!
         end
@@ -24,7 +26,7 @@ module Jackal
         end
 
         begin
-          Carnivore::Utils.symbolize_hash(Carnivore::Config.data.to_smash).each do |namespace, args|
+          Carnivore::Config.to_smash.each do |namespace, args|
             next unless args.is_a?(Hash)
             args.each do |key, opts|
               next unless opts.is_a?(Hash) && opts[:sources]

@@ -1,5 +1,3 @@
-require 'carnivore/config'
-
 ENV['JACKAL_TESTING_MODE'] = 'true'
 
 path = File.join(Dir.pwd, 'test')

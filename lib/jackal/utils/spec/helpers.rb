@@ -55,10 +55,9 @@ end
 # @return [Thread] thread with running source
 def run_setup(config)
   path = File.join(Dir.pwd, 'test/specs/config', "#{config}.json")
-  Carnivore::Config.configure(:config_path => path)
   Thread.abort_on_exception = true
   runner = Thread.new do
-    require 'jackal/loader'
+    Jackal::Loader.run!(:config => path)
   end
   source_wait(:setup)
   runner
