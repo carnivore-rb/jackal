@@ -26,11 +26,22 @@ module Jackal
     # Create a new instance
     #
     # @return [self]
-    def initialize
+    def initialize(callback=nil)
+      @callback = callback
       [:SOURCE, :DESTINATION].each do |key|
         unless(self.class.const_get(key))
           raise NotImplementedError.new("Formatter class must define #{key} constant")
         end
+      end
+    end
+
+    # Provide a simple proxy out to originating callback if provided
+    # to access helpers
+    def method_missing(m_name, *args, &block)
+      if(@callback && @callback.respond_to?(m_name))
+        @callback.send(m_name, *args, &block)
+      else
+        super
       end
     end
 
