@@ -37,8 +37,19 @@ module Jackal
                     :type => source_args[:type].to_sym,
                     :args => source_args.fetch(:args, {}).merge(:name => "#{namespace}_#{key}_#{kind}"),
                     :orphan_callback => lambda{|message|
-                      error "No callbacks matched message. Failed to process. Removed from bus. (#{message})"
+                      warn "No callbacks matched message. Auto confirming message from source. (#{message})"
                       message.confirm!
+                      if(name.to_s.end_with?('input'))
+                        destination = Carnivore::Supervisor.supervisor[name.to_s.sub('_input', '_output')]
+                        if(destination)
+                          warn "Auto pushing orphaned message to next destination (#{message} -> #{destination.name})"
+                          begin
+                            destination.transmit(Utils.unpack(message))
+                          rescue => e
+                            error "Failed to auto push message (#{message}): #{e.class} - #{e}"
+                          end
+                        end
+                      end
                     }
                   )
                   Carnivore::Utils.info "Registered new source: #{namespace}_#{key}_#{kind}"
