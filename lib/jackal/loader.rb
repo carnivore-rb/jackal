@@ -42,7 +42,7 @@ module Jackal
                     }
                   )
                   Carnivore::Utils.info "Registered new source: #{namespace}_#{key}_#{kind}"
-                  if(kind == :input)
+                  if(kind.to_s == 'input')
                     opts.fetch(:callbacks, []).each do |klass_name|
                       klass = Utils.constantize(klass_name)
                       source.add_callback(klass_name, klass)
