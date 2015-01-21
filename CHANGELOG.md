@@ -1,3 +1,8 @@
+# v0.2.2
+* Automatically forward payloads with no matches
+* Fix input sources setup
+* Update formatter to allow linking back to owner callback
+
 # v0.2.0
 * Add abstract payload formatter
 * Provide common helper method to shell out
