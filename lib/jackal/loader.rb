@@ -35,22 +35,28 @@ module Jackal
                 opts.fetch(:sources, {}).each do |kind, source_args|
                   source = Carnivore::Source.build(
                     :type => source_args[:type].to_sym,
-                    :args => source_args.fetch(:args, {}).merge(:name => "#{namespace}_#{key}_#{kind}"),
-                    :orphan_callback => lambda{|message|
-                      warn "No callbacks matched message. Auto confirming message from source. (#{message})"
-                      message.confirm!
-                      if(name.to_s.end_with?('input'))
-                        destination = Carnivore::Supervisor.supervisor[name.to_s.sub('_input', '_output')]
-                        if(destination)
-                          warn "Auto pushing orphaned message to next destination (#{message} -> #{destination.name})"
-                          begin
-                            destination.transmit(Utils.unpack(message))
-                          rescue => e
-                            error "Failed to auto push message (#{message}): #{e.class} - #{e}"
+                    :args => source_args.fetch(:args, {}).merge(
+                      :name => "#{namespace}_#{key}_#{kind}",
+                      :orphan_callback => lambda{|message|
+                        warn "No callbacks matched message. Auto confirming message from source. (#{message})"
+                        message.confirm!
+                        if(name.to_s.end_with?('input'))
+                          destination = Carnivore::Supervisor.supervisor[name.to_s.sub('_input', '_output')]
+                          if(destination)
+                            warn "Auto pushing orphaned message to next destination (#{message} -> #{destination.name})"
+                            begin
+                              destination.transmit(Utils.unpack(message))
+                            rescue => e
+                              error "Failed to auto push message (#{message}): #{e.class} - #{e}"
+                            end
+                          else
+                            warn "Failed to location destination for message forward! (Destination: #{destination} #{message})"
                           end
+                        else
+                          error "Cannot auto forward from output source. No messages should be encountered here! (#{message})"
                         end
-                      end
-                    }
+                      }
+                    )
                   )
                   Carnivore::Utils.info "Registered new source: #{namespace}_#{key}_#{kind}"
                   if(kind.to_s == 'input')
