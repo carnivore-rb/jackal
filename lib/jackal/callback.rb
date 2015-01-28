@@ -6,10 +6,11 @@ module Jackal
 
     include Utils::Payload
     include Utils::Config
-    include Utils::Config
     # @!parse include Jackal::Utils::Payload
     # @!parse include Jackal::Utils::Config
-    # @!parse include Jackal::Utils::Constants
+
+    include Bogo::Constants
+    include Bogo::Memoization
 
     # @return [Array<Formatter>] formatters
     attr_reader :formatters
@@ -26,12 +27,21 @@ module Jackal
       end
     end
 
+    # @return [Jackal::Assets::Store]
+    # @note the assets library is NOT a dependency of jackal and must
+    #   be included at runtime!
+    def asset_store
+      memoize(:asset_store) do
+        require 'jackal-assets'
+        Jackal::Assets::Store.new
+      end
+    end
+
     # @return [Utils::Process]
     def process_manager
-      unless(@_process)
-        @_process = Utils::Process.new
+      memoize(:process_manager) do
+        Utils::Process.new
       end
-      @_process
     end
 
     # Validity of message
