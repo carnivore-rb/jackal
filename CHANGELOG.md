@@ -1,3 +1,7 @@
+# v0.2.4
+* Fix nesting for orphan callback setup
+* Add constant and memoization helpers into `Callback`
+
 # v0.2.2
 * Automatically forward payloads with no matches
 * Fix input sources setup
