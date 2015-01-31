@@ -95,14 +95,16 @@ module Jackal
     def completed(payload, message)
       message.confirm!
       info "Processing of #{message} complete on this callback"
-      forward(payload)
+      forward(payload, source.name)
     end
 
     # Forward payload to output source
     #
     # @param payload [Hash]
-    def forward(payload)
-      dest = destination(:output, payload)
+    def forward(payload, dest=nil)
+      unless(dest)
+        dest = destination(:output, payload)
+      end
       source = Carnivore::Supervisor.supervisor[dest]
       if(source)
         info "Forwarding payload to output destination... (#{source})"
