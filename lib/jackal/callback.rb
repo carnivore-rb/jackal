@@ -77,13 +77,13 @@ module Jackal
     def failed(payload, message, reason='No reason provided')
       error "Processing of #{message} failed! Reason: #{reason}"
       message.confirm!
-      destination = "#{source_prefix}_error"
-      source = Carnivore::Supervisor.supervisor[destination]
+      dest = destination(:error, payload)
+      source = Carnivore::Supervisor.supervisor[dest]
       if(source)
         error "Sending #{message} to error handler: #{source}"
         source.transmit(payload)
       else
-        error "No error source found for generated source path: #{destination}"
+        error "No error source found for generated source path: #{dest}"
         info "Processing of message #{message} has completed. Message now discarded."
       end
     end
@@ -102,14 +102,14 @@ module Jackal
     #
     # @param payload [Hash]
     def forward(payload)
-      destination = "#{source_prefix}_output"
-      source = Carnivore::Supervisor.supervisor[destination]
+      dest = destination(:output, payload)
+      source = Carnivore::Supervisor.supervisor[dest]
       if(source)
         info "Forwarding payload to output destination... (#{source})"
         debug "Forwarded payload: #{payload.inspect}"
         source.transmit(payload)
       else
-        warn "No destination source found for generated source path: #{destination}"
+        warn "No destination source found for generated source path: #{dest}"
         info "Processing of message has completed. Message now discarded."
       end
     end
