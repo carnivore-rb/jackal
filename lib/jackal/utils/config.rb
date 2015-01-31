@@ -31,11 +31,12 @@ module Jackal
         service_config[:config] || Smash.new
       end
 
-      # Generation destination key based on direction
+      # Generate destination key based on direction
       #
       # @param direction [Symbol, String]
+      # @param payload [Smash]
       # @return [Symbol]
-      def destination(direction = :output)
+      def destination(direction, payload)
         [source_prefix, direction].map(&:to_s).join('_').to_sym
       end
 
