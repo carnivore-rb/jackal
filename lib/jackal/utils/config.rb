@@ -26,7 +26,7 @@ module Jackal
       # @return [Array] key path in configuration
       def config_path(class_name = self.class.name)
         class_name.split('::')[0,2].map do |string|
-          downcase(string)
+          snake(string)
         end
       end
 
@@ -38,7 +38,7 @@ module Jackal
       # @return [Smash] application configuration
       def app_config
         Carnivore::Config.fetch(
-          downcase(
+          snake(
             self.class.name.split('::').first
           ),
           Smash.new
