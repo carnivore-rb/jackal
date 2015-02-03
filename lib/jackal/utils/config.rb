@@ -4,6 +4,20 @@ module Jackal
   module Utils
     module Config
 
+      # Load extra modules automatically
+      def self.included(klass)
+        klass.class_eval do
+          include Bogo::AnimalStrings
+        end
+      end
+
+      # Load extra modules automatically
+      def self.extended(klass)
+        klass.class_eval do
+          extend Bogo::AnimalStrings
+        end
+      end
+
       # @return [Symbol] name of service
       def service_name(class_name = self.class.name)
         config_path(class_name).last.to_sym
@@ -12,13 +26,23 @@ module Jackal
       # @return [Array] key path in configuration
       def config_path(class_name = self.class.name)
         class_name.split('::')[0,2].map do |string|
-          string.gsub(/(?<![A-Z])([A-Z])/, '_\1').sub(/^_/, '').downcase
+          downcase(string)
         end
       end
 
       # @return [String] prefix of source for this callback
       def source_prefix
         config_path.join('_')
+      end
+
+      # @return [Smash] application configuration
+      def app_config
+        Carnivore::Config.fetch(
+          downcase(
+            self.class.name.split('::').first
+          ),
+          Smash.new
+        )
       end
 
       # @return [Smash] service configuration
