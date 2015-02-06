@@ -40,7 +40,7 @@ module Jackal
     # @return [Utils::Process]
     def process_manager
       memoize(:process_manager) do
-        Utils::Process.new
+        Utils::Process.new(app_config.fetch(:process_manager, Smash.new))
       end
     end
 
