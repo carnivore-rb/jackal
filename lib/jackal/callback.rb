@@ -22,7 +22,7 @@ module Jackal
       super
       if(service_config[:formatters])
         @formatters = service_config[:formatters].map do |klass_name|
-          constantize(klass_name).new
+          constantize(klass_name).new(self)
         end
       end
     end
