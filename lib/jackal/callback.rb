@@ -1,4 +1,5 @@
 require 'jackal'
+require 'pp'
 
 module Jackal
   # Jackal customized callback
@@ -108,7 +109,7 @@ module Jackal
       source = Carnivore::Supervisor.supervisor[dest]
       if(source)
         info "Forwarding payload to output destination... (#{source})"
-        debug "Forwarded payload: #{payload.inspect}"
+        debug "Forwarded payload: #{payload.pretty_inspect}"
         source.transmit(payload)
       else
         warn "No destination source found for generated source path: #{dest}"
