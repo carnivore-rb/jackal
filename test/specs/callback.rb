@@ -24,4 +24,9 @@ describe Jackal::Callback do
     ->{ Carnivore::Supervisor.supervisor[:test_namespace_worker_error].name }.must_raise NoMethodError
   end
 
+  it 'should run (double to ensure re-config)' do
+    Carnivore::Supervisor.supervisor[:test_namespace_worker_input].name
+    Carnivore::Supervisor.supervisor[:test_namespace_worker_output].name
+    ->{ Carnivore::Supervisor.supervisor[:test_namespace_worker_error].name }.must_raise NoMethodError
+  end
 end
