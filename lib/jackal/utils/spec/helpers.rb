@@ -40,7 +40,7 @@ def payload_for(style, args={})
       if(args[:nest])
         Jackal::Utils.new_payload(:test, args[:nest] => MultiJson.load(File.read(path)))
       else
-        Jackal::Utils.new_payload(:test, File.read(path))
+        Jackal::Utils.new_payload(:test, MultiJson.load(File.read(path)))
       end
     end
   else
