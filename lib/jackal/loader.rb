@@ -10,8 +10,12 @@ module Jackal
       # @param opts [Hash]
       def run!(opts)
 
-        if(ENV['JACKAL_TESTING_MODE'] && !opts[:config])
-          Carnivore.configure!(:verify)
+        if(ENV['JACKAL_TESTING_MODE'])
+          if(!opts[:config])
+            Carnivore.configure!(:verify)
+          else
+            Carnivore.configure!(opts[:config], :force)
+          end
         else
           Carnivore.configure!(opts[:config])
           Carnivore::Config.immutable!
