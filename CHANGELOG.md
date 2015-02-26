@@ -1,3 +1,9 @@
+# v0.3.0
+* Force source looping on `Callback#completed`
+* Move HTTP hook configuration within jackal namespace
+* Add support for using `spawn` on a per-process basis
+* Link owner callback into formatters
+
 # v0.2.4
 * Fix nesting for orphan callback setup
 * Add constant and memoization helpers into `Callback`
