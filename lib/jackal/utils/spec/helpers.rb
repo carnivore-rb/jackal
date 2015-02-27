@@ -51,10 +51,15 @@ end
 # Configure using custom configuration JSON within config
 # directory of current test
 #
-# @param config [String, Symbol] name of configuration file without json extension
+# @param config [String, Symbol] name of configuration file
 # @return [Thread] thread with running source
 def run_setup(config)
-  path = File.join(Dir.pwd, 'test/specs/config', "#{config}.json")
+  config_dir = File.join(Dir.pwd, 'test', 'specs', 'config')
+  path = Dir.glob(File.join(config_dir, "#{config}*")).first
+
+  msg = "No file matching #{config} found in #{config_dir}"
+  raise msg unless path
+
   Thread.abort_on_exception = true
   runner = Thread.new do
     Jackal::Loader.run!(:config => path)
