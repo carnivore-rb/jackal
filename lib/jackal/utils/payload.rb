@@ -26,7 +26,17 @@ module Jackal
       # @return [Smash]
       def unpack(message)
         msg = message[:message].to_smash
-        msg.fetch(:payload, msg)
+        result = msg.fetch(:payload, msg)
+        if(respond_to?(:pre_formatters) && !pre_formatters.empty?)
+          pre_formatters.each do |formatter|
+            begin
+              formatter.format(result)
+            rescue => e
+              error "Formatter error encountered (<#{formatter}>): #{e.class} - #{e}"
+            end
+          end
+        end
+        result
       end
 
     end

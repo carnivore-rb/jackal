@@ -13,8 +13,10 @@ module Jackal
     include Bogo::Constants
     include Bogo::Memoization
 
-    # @return [Array<Formatter>] formatters
+    # @return [Array<Formatter>] formatters applied on complete
     attr_reader :formatters
+    # @return [Array<Formatter>] formatters applied prior
+    attr_reader :pre_formatters
 
     # Create new instance
     #
@@ -22,9 +24,35 @@ module Jackal
     def initialize(*_)
       super
       if(service_config[:formatters])
-        @formatters = service_config[:formatters].map do |klass_name|
+        setup_formatters
+      end
+    end
+
+    # Initialize any required formatters
+    #
+    # @return [TrueClass, FalseClass]
+    def setup_formatters
+      f_config = service_config[:formatters]
+      case f_config
+      when Hash
+        @formatters = f_config.fetch(:pre, []).map do |klass_name|
           constantize(klass_name).new(self)
         end
+        @pre_formatters = f_config.fetch(:post, []).map do |klass_name|
+          constantize(klass_name).new(self)
+        end
+      when Array
+        @formatters = f_config.map do |klass_name|
+          constantize(klass_name).new(self)
+        end
+        @pre_formatters = []
+      else
+        error "Formatters configuration error. Unable to process type `#{f_config.class}`."
+        false
+      end
+    end
+
+
       end
     end
 
@@ -137,7 +165,11 @@ module Jackal
     # @return [Smash]
     def apply_formatters!(payload)
       formatters.each do |formatter|
-        formatter.format(payload)
+        begin
+          formatter.format(payload)
+        rescue => e
+          error "Formatter error encountered (<#{formatter}>): #{e.class} - #{e}"
+        end
       end
     end
 
