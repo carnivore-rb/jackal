@@ -52,10 +52,6 @@ module Jackal
       end
     end
 
-
-      end
-    end
-
     # @return [Jackal::Assets::Store]
     # @note the assets library is NOT a dependency of jackal and must
     #   be included at runtime!
