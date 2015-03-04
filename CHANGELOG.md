@@ -1,3 +1,6 @@
+# v0.3.2
+* Add support for `pre` and `post` formatters
+
 # v0.3.0
 * Force source looping on `Callback#completed`
 * Move HTTP hook configuration within jackal namespace
