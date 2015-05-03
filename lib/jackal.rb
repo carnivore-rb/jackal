@@ -9,10 +9,17 @@ module Jackal
   autoload :Utils, 'jackal/utils'
   autoload :Loader, 'jackal/loader'
 
-  class ServiceConfiguration < Bogo::Config
-    attribute :description, String
-    attribute :configuration, Smash, :coerce => lambda{|v| v.to_smash}
+  class ServiceInformation < Bogo::Config
+    class Configuration < Bogo::Config
+      attribute :name, Symbol, :required => true, :coerce => lambda{|v| v.to_sym}
+      attribute :description, String
+      attribute :public, [TrueClass, FalseClass], :default => true, :required => true
+    end
+
+    attribute :name, Symbol, :required => true, :coerce => lambda{|v| v.to_sym}
+    attribute :configuration, Configuration, :coerce => lambda{|v| Configuration.new(v.map{|name,hsh| hsh.merge(:name => name)})}
   end
+
 
   # Add service information
   #
@@ -22,7 +29,7 @@ module Jackal
   # @option args [Hash] :configuration
   # @return [NilClass]
   def self.service(name, args={})
-    @services[name] = ServiceConfiguration.new(args)
+    @services[name] = ServiceInformation.new(args)
     nil
   end
 
