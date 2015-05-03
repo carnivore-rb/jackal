@@ -18,8 +18,13 @@ module Jackal
     end
 
     attribute :name, Symbol, :required => true, :coerce => lambda{|v| v.to_sym}
+    attribute :description, String
     attribute :configuration, Configuration, :multiple => true, :default => [], :coerce => lambda{|v|
-      Configuration.new(v.map{|name,hsh| hsh.merge(:name => name)})
+      Smash.new(
+        :bogo_multiple => v.map{|name, hsh|
+          Configuration.new(hsh.merge(:name => name))
+        }
+      )
     }
   end
 
@@ -31,6 +36,7 @@ module Jackal
   # @option args [Hash] :configuration
   # @return [NilClass]
   def self.service(name, args={})
+    name = name.to_s
     if(@services[name])
       new_config = ServiceInformation.new(args)
       @services[name] = ServiceInformation.new(
@@ -42,7 +48,7 @@ module Jackal
         )
       )
     else
-      @services[name] = ServiceInformation.new(args)
+      @services[name] = ServiceInformation.new(args.merge(:name => name))
     end
     nil
   end
