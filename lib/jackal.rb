@@ -1,4 +1,5 @@
 require 'carnivore'
+require 'bogo-config'
 
 module Jackal
   autoload :Cli, 'jackal/cli'
@@ -8,6 +9,11 @@ module Jackal
   autoload :Utils, 'jackal/utils'
   autoload :Loader, 'jackal/loader'
 
+  class ServiceConfiguration < Bogo::Config
+    attribute :description, String
+    attribute :configuration, Smash, :coerce => lambda{|v| v.to_smash}
+  end
+
   # Add service information
   #
   # @param name [String, Symbol] name of service
@@ -16,7 +22,7 @@ module Jackal
   # @option args [Hash] :configuration
   # @return [NilClass]
   def self.service(name, args={})
-    @services[name] = args
+    @services[name] = ServiceConfiguration.new(args)
     nil
   end
 
