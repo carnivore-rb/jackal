@@ -38,7 +38,7 @@ module Jackal
   def self.service(name, args={})
     name = name.to_s
     if(@services[name])
-      new_config = ServiceInformation.new(args)
+      new_config = ServiceInformation.new(args.merge(:name => name))
       @services[name] = ServiceInformation.new(
         @services[name].data.merge(
           :configuration => (
