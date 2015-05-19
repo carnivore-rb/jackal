@@ -25,8 +25,12 @@ module Jackal
       # @param message [Carnivore::Message]
       # @return [Smash]
       def unpack(message)
-        msg = message[:message].to_smash
-        result = msg.fetch(:payload, msg)
+        if(message[:content])
+          result = message[:content].to_smash
+        else
+          msg = message[:message].to_smash
+          result = msg.fetch(:payload, msg)
+        end
         if(respond_to?(:pre_formatters) && (pre_formatters && !pre_formatters.empty?))
           pre_formatters.each do |formatter|
             begin
