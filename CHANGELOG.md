@@ -1,3 +1,6 @@
+# v0.3.6
+* Fix config library dependency constraints
+
 # v0.3.4
 * Scrub environment prior to shelling out
 * Add service registration helper
