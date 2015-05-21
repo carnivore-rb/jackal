@@ -1,3 +1,8 @@
+# v0.3.4
+* Scrub environment prior to shelling out
+* Add service registration helper
+* Extract payload directly if provided via source
+
 # v0.3.2
 * Add support for `pre` and `post` formatters
 
