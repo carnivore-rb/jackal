@@ -13,7 +13,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'carnivore', '>= 0.3.12', '< 1.0.0'
   s.add_dependency 'bogo', '>= 0.1.24', '< 1.0.0'
   s.add_dependency 'bogo-cli', '~> 0.1'
-  s.add_dependency 'bogo-config', '>= 0.1.20', '< 1.0.0'
+  s.add_dependency 'bogo-config', '>= 0.1.12', '< 1.0.0'
   s.add_dependency 'childprocess'
   s.files = Dir['{lib,bin}/**/**/*'] + %w(jackal.gemspec README.md CHANGELOG.md CONTRIBUTING.md LICENSE)
   s.executables << 'jackal'
