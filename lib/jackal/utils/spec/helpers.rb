@@ -72,7 +72,11 @@ end
 
 # @klass callback class to inject execution tracking
 def track_execution(klass)
-  klass.send(:alias_method, :execute_orig, :execute)
+  alias_name = :execute_orig
+  # Ensure this is called only once within test suite
+  return if klass.method_defined?(alias_name)
+
+  klass.send(:alias_method, alias_name, :execute)
   klass.send(:define_method, :execute) do |message|
     message.args['message']['executed'] = true
     execute_orig(message)
