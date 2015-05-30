@@ -67,3 +67,17 @@ def run_setup(config)
   source_wait(:setup)
   runner
 end
+
+# Store callback execution flag in payload to test callback validity
+
+# @klass callback class to inject execution tracking
+def track_execution(klass)
+  klass.send(:alias_method, :execute_orig, :execute)
+  klass.send(:define_method, :execute) do |message|
+    message.args['message']['executed'] = true
+    execute_orig(message)
+  end
+
+  # add convenience method for checking callback execution
+  Bogo::Smash.send(:define_method, :executed?) { self.get(:executed) == true }
+end
