@@ -85,8 +85,20 @@ end
 
 # Convenience method to check whether or not callback was executed
 
-# @param  [Smash] payload result from callback execution
+# @param payload [Smash] payload result from callback execution
 # @return [Boolean] callback execution status
 def callback_executed?(payload)
   payload.get(:executed) == true
+end
+
+# Convenience method for sending an actor a payload and waiting for result
+
+# @param actor [Carnivore::Source::Actor] actor to receive payload
+# @param payload [Smash] payload to send actor
+# @param wait_time [Integer] max time to wait for message result (default 1)
+# @return [Smash] payload result
+def transmit_and_wait(actor, payload, wait_time = 1)
+  actor.transmit(payload)
+  source_wait(wait_time) { !MessageStore.messages.empty? }
+  MessageStore.messages.pop
 end
