@@ -81,7 +81,12 @@ def track_execution(klass)
     message.args['message']['executed'] = true
     execute_orig(message)
   end
+end
 
-  # add convenience method for checking callback execution
-  Bogo::Smash.send(:define_method, :executed?) { self.get(:executed) == true }
+# Convenience method to check whether or not callback was executed
+
+# @param  [Smash] payload result from callback execution
+# @return [Boolean] callback execution status
+def callback_executed?(payload)
+  payload.get(:executed) == true
 end
