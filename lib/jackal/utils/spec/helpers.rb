@@ -95,7 +95,7 @@ end
 
 # @param actor [Carnivore::Source::Actor] actor to receive payload
 # @param payload [Smash] payload to send actor
-# @param wait_time [Integer] max time to wait for message result (default 1)
+# @param wait_time [Numeric] max time to wait for message result (default 1)
 # @return [Smash] payload result
 def transmit_and_wait(actor, payload, wait_time = 1)
   actor.transmit(payload)
