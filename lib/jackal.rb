@@ -19,6 +19,7 @@ module Jackal
 
     attribute :name, Symbol, :required => true, :coerce => lambda{|v| v.to_sym}
     attribute :description, String
+    attribute :category, Symbol, :allowed_values => [:full, :modifier, :notifier], :default => :full, :multiple => true
     attribute :configuration, Configuration, :multiple => true, :default => [], :coerce => lambda{|v|
       Smash.new(
         :bogo_multiple => v.map{|name, hsh|
