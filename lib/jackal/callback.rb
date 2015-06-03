@@ -90,6 +90,7 @@ module Jackal
       rescue => e
         error "!!! Unexpected failure encountered -> #{e.class}: #{e}"
         debug "#{e.class}: #{e}\n#{(e.backtrace || []).join("\n")}"
+        payload.set(:error, "#{e.class}: #{e.message}")
         failed(payload, message, e.message)
       end
     end
@@ -101,10 +102,16 @@ module Jackal
     # @param reason [String]
     def failed(payload, message, reason='No reason provided')
       error "Processing of #{message} failed! Reason: #{reason}"
+      unless(payload[:error])
+        payload.set(:error, true)
+      end
       message.confirm!
       dest = destination(:error, payload)
       source = Carnivore::Supervisor.supervisor[dest]
       if(source)
+        if(formatters)
+          apply_formatters!(payload)
+        end
         error "Sending #{message} to error handler: #{source}"
         source.transmit(payload)
       else
@@ -132,6 +139,9 @@ module Jackal
       end
       source = Carnivore::Supervisor.supervisor[dest]
       if(source)
+        if(formatters)
+          apply_formatters!(payload)
+        end
         info "Forwarding payload to output destination... (#{source})"
         debug "Forwarded payload: #{payload.pretty_inspect}"
         source.transmit(payload)
@@ -148,9 +158,6 @@ module Jackal
     # @param message [Carnivore::Message]
     def job_completed(name, payload, message)
       info "Processing of message #{message} has completed within this component #{name}"
-      if(formatters)
-        apply_formatters!(payload)
-      end
       message.confirm!
       forward(payload)
     end
