@@ -1,3 +1,6 @@
+# v0.3.10
+* Add `:array` to allowed values for configuration type in service registration
+
 # v0.3.8
 * Expansion of testing helpers
 * Addition of `category` to service registration
