@@ -1,3 +1,8 @@
+# v0.3.8
+* Expansion of testing helpers
+* Addition of `category` to service registration
+* Set error into payload on failure
+
 # v0.3.6
 * Fix config library dependency constraints
 
