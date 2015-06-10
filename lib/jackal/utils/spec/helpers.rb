@@ -62,7 +62,7 @@ def run_setup(config)
 
   Thread.abort_on_exception = true
   runner = Thread.new do
-    Jackal::Loader.run!(:config => path)
+    Jackal::Utils::Spec.system_runner.run!(:config => path)
   end
   source_wait(:setup)
   runner
