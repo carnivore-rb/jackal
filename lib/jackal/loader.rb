@@ -16,13 +16,19 @@ module Jackal
           else
             Carnivore.configure!(opts[:config], :force)
           end
+          default_verbosity = :fatal
         else
           Carnivore.configure!(opts[:config])
           Carnivore::Config.immutable!
+          default_verbosity = :info
         end
 
+        default_verbosity = :debug if ENV['DEBUG']
+
         Celluloid.logger.level = Celluloid.logger.class.const_get(
-          (opts[:verbosity] || Carnivore::Config[:verbosity] || :debug).to_s.upcase
+          opts.fetch(:verbosity,
+            Carnivore::Config.fetch(:verbosity, default_verbosity)
+          ).to_s.upcase
         )
         true
       end
