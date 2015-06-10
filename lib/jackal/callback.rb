@@ -103,7 +103,7 @@ module Jackal
     def failed(payload, message, reason='No reason provided')
       error "Processing of #{message} failed! Reason: #{reason}"
       unless(payload[:error])
-        payload.set(:error, true)
+        payload.set(:error, reason)
       end
       message.confirm!
       dest = destination(:error, payload)
