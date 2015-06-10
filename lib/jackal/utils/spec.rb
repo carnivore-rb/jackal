@@ -8,6 +8,9 @@ module Jackal
 
       class << self
 
+        # @return [Class] class used to run subsystem
+        attr_accessor :system_runner
+
         # Valid directories for test payloads
         #
         # @param args [String] list of directories to append
@@ -29,3 +32,5 @@ module Jackal
     end
   end
 end
+
+Jackal::Utils::Spec.system_runner = Jackal::Loader
