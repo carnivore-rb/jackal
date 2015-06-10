@@ -10,6 +10,7 @@ module Jackal
       # @param opts [Hash]
       # @return [TrueClass]
       def configure!(opts)
+        default_verbosity = nil
         if(ENV['JACKAL_TESTING_MODE'])
           if(!opts[:config])
             Carnivore.configure!(:verify)
@@ -24,19 +25,29 @@ module Jackal
         end
 
         default_verbosity = :debug if ENV['DEBUG']
+        const = opts.fetch(:verbosity,
+          Carnivore::Config.fetch(:verbosity, default_verbosity)
+        ).to_s.upcase
 
-        Celluloid.logger.level = Celluloid.logger.class.const_get(
-          opts.fetch(:verbosity,
-            Carnivore::Config.fetch(:verbosity, default_verbosity)
-          ).to_s.upcase
-        )
+        Celluloid.logger.level = Celluloid.logger.class.const_get(const)
         true
+      end
+
+      # Scrub and type opts
+      #
+      # @param opts [Slop,Hash]
+      # @return [Smash]
+      def process_opts(opts)
+        opts = opts.to_hash.to_smash
+        opts.delete_if{|k,v| v.nil?}
+        opts
       end
 
       # Run the jackal
       #
       # @param opts [Hash]
       def run!(opts)
+        opts = process_opts(opts)
         configure!(opts)
 
         Carnivore::Config.fetch(:jackal, :require, []).each do |path|
