@@ -12,7 +12,7 @@ module Jackal
   class ServiceInformation < Bogo::Config
     class Configuration < Bogo::Config
       attribute :name, Symbol, :required => true, :coerce => lambda{|v| v.to_sym}
-      attribute :type, Symbol, :required => true, :default => :string, :allowed_values => [:string, :hash, :number, :boolean]
+      attribute :type, Symbol, :required => true, :default => :string, :allowed_values => [:string, :hash, :array, :number, :boolean]
       attribute :description, String
       attribute :public, [TrueClass, FalseClass], :default => true, :required => true
     end
