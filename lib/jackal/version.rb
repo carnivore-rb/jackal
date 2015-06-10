@@ -1,4 +1,4 @@
 module Jackal
   # Current library version
-  VERSION = Gem::Version.new('0.3.11')
+  VERSION = Gem::Version.new('0.3.12')
 end

@@ -1,3 +1,8 @@
+# v0.3.12
+* Set default verbosity to :info
+* Support changing spec runner
+* Add options scrubbing on startup
+
 # v0.3.10
 * Add `:array` to allowed values for configuration type in service registration
 
