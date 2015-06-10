@@ -98,7 +98,22 @@ end
 # @param wait_time [Numeric] max time to wait for message result (default 1)
 # @return [Smash] payload result
 def transmit_and_wait(actor, payload, wait_time = 1)
+  actor.callbacks.each do |c_name|
+    callback = actor.callback_supervisor[actor.callback_name(c_name)]
+    if(callback.respond_to?(:test_payload=))
+      callback.payload = Smash.new
+    end
+  end
   actor.transmit(payload)
   source_wait(wait_time) { !MessageStore.messages.empty? }
+  actor.callbacks.each do |c_name|
+    callback = actor.callback_supervisor[actor.callback_name(c_name)]
+    if(callback.respond_to?(:test_payload=))
+      unless(MessageStore.messages.empty?)
+        MessageStore.messages.first.deep_merge!(callback.payload)
+      end
+      callback.payload = nil
+    end
+  end
   MessageStore.messages.pop
 end
