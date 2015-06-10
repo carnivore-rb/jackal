@@ -5,11 +5,11 @@ module Jackal
   class Loader
     class << self
 
-      # Run the jackal
+      # Configure the application
       #
       # @param opts [Hash]
-      def run!(opts)
-
+      # @return [TrueClass]
+      def configure!(opts)
         if(ENV['JACKAL_TESTING_MODE'])
           if(!opts[:config])
             Carnivore.configure!(:verify)
@@ -24,6 +24,14 @@ module Jackal
         Celluloid.logger.level = Celluloid.logger.class.const_get(
           (opts[:verbosity] || Carnivore::Config[:verbosity] || :debug).to_s.upcase
         )
+        true
+      end
+
+      # Run the jackal
+      #
+      # @param opts [Hash]
+      def run!(opts)
+        configure!(opts)
 
         Carnivore::Config.fetch(:jackal, :require, []).each do |path|
           require path
