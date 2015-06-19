@@ -69,24 +69,26 @@ def run_setup(config)
 end
 
 # Store method execution flags in global variable to track method calls
-#   This should be in a test before block so the global gets reset
-#   for each test case (so results can be isolated)
+#   This should be in a test before block so method calls can be stored
+#   for each test case run (so results can be isolated)
 
-# @klass callback class to inject execution tracking
+# @param klass [Class] class where methods should be tracked
+# @return [Array<Symbol>] array of method names called (as symbols)
 def track_method_calls(klass)
   callback_instance_methods = klass.public_instance_methods(false)
 
-  $method_calls = []
+  method_calls = []
   callback_instance_methods.each do |meth|
     alias_name = :"#{meth}_orig"
-    return if klass.method_defined?(alias_name)
 
-    klass.send(:alias_method, alias_name, meth)
+    klass.send(:alias_method, alias_name, meth) unless klass.method_defined?(alias_name)
     klass.send(:define_method, meth) do |*args|
-      Thread.exclusive { $method_calls << meth.to_sym }
+      method_calls << meth.to_sym
       send(alias_name, *args)
     end
   end
+
+  method_calls
 end
 
 # Maintain backwards compatibility with older, less general execution tracking
