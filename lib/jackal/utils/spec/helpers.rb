@@ -68,9 +68,8 @@ def run_setup(config)
   runner
 end
 
-# Store method execution flags in global variable to track method calls
-#   This should be in a test before block so method calls can be stored
-#   for each test case run (so results can be isolated)
+# Track method execution for provided class.  This should be in
+#   test before block so method calls can be stored for each test case
 
 # @param klass [Class] class where methods should be tracked
 # @return [Array<Symbol>] array of method names called (as symbols)
@@ -89,19 +88,6 @@ def track_method_calls(klass)
   end
 
   method_calls
-end
-
-# Maintain backwards compatibility with older, less general execution tracking
-def track_execution(klass)
-  track_method_calls(klass)
-end
-
-# Convenience method to check whether or not callback was executed
-
-# @param payload [Smash] payload result from callback execution
-# @return [Boolean] callback execution status
-def callback_executed?(payload)
-  $method_calls.include?(:execute)
 end
 
 # Convenience method for sending an actor a payload and waiting for result
