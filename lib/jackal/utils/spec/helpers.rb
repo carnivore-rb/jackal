@@ -68,27 +68,26 @@ def run_setup(config)
   runner
 end
 
-# Store callback execution flag in payload to test callback validity
+# Track method execution for provided class.  This should be in
+#   test before block so method calls can be stored for each test case
 
-# @klass callback class to inject execution tracking
-def track_execution(klass)
-  alias_name = :execute_orig
-  # Ensure this is called only once within test suite
-  return if klass.method_defined?(alias_name)
+# @param klass [Class] class where methods should be tracked
+# @return [Array<Symbol>] array of method names called (as symbols)
+def track_method_calls(klass)
+  callback_instance_methods = klass.public_instance_methods(false)
 
-  klass.send(:alias_method, alias_name, :execute)
-  klass.send(:define_method, :execute) do |message|
-    message.args['message']['executed'] = true
-    execute_orig(message)
+  method_calls = []
+  callback_instance_methods.each do |meth|
+    alias_name = :"#{meth}_orig"
+
+    klass.send(:alias_method, alias_name, meth) unless klass.method_defined?(alias_name)
+    klass.send(:define_method, meth) do |*args|
+      method_calls << meth.to_sym
+      send(alias_name, *args)
+    end
   end
-end
 
-# Convenience method to check whether or not callback was executed
-
-# @param payload [Smash] payload result from callback execution
-# @return [Boolean] callback execution status
-def callback_executed?(payload)
-  payload.get(:executed) == true
+  method_calls
 end
 
 # Convenience method for sending an actor a payload and waiting for result
