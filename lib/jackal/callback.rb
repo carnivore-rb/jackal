@@ -88,10 +88,9 @@ module Jackal
         payload = unpack(message)
         yield payload
       rescue => e
-        error "!!! Unexpected failure encountered -> #{e.class}: #{e}"
+        error "!!! Unexpected failure encountered (#{message}) -> #{e.class}: #{e}"
         debug "#{e.class}: #{e}\n#{(e.backtrace || []).join("\n")}"
-        payload.set(:error, "#{e.class}: #{e.message}")
-        failed(payload, message, e.message)
+        failed(payload, message, "Unexpected error encountered (Exception Type: #{e.class})!")
       end
     end
 
