@@ -2,4 +2,8 @@
 # -*- mode: ruby -*-
 # -*- encoding: utf-8 -*-
 
-require 'jackal/utils/spec/loader'
+if ARGV.first == 'generate'
+  require 'jackal/utils/spec/generator'
+else
+  require 'jackal/utils/spec/loader'
+end
