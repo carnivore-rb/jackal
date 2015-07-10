@@ -1,65 +1,70 @@
-require 'erb'
+require 'bogo-cli'
 require 'fileutils'
-require 'optparse'
+require 'jackal'
 
-TEST_DIRS = 'test/specs/config'
+module Jackal
+  module Utils
+    module Spec
+      class Generator < Bogo::Cli::Command
+        TEST_DIRS = 'test/specs/config'
 
-OptionParser.new do |opts|
-  opts.banner = "Usage: jackal-test generate [options]"
+        def initialize(opts, args)
+          super
 
-  opts.on("-sSNAME", "--service_name=SNAME", "Name of fission service to test (eg: Mail)") do |v|
-    @orig_service_name = v.downcase
-    @service_name = @orig_service_name.gsub(/-/, '_')
-    @service_class_name = @service_name.split('_').map(&:capitalize).join
-  end
+          @orig_service_name = opts[:service_name]
+          @service_name = @orig_service_name.gsub(/-/, '_')
+          @service_class_name = @service_name.split('_').map(&:capitalize).join
 
-  opts.on("-mMNAME", "--module_name=MNAME", "Name of particular class to test (eg: Mandrill)") do |v|
-    @module_name = v.downcase
-    @module_class_name = @module_name.capitalize
-  end
+          @module_name = opts[:module_name]
+          @module_class_name = @module_name.capitalize
 
-end.parse!
+          @callback_type   = 'jackal'
+          @supervisor_name = "jackal_#{@service_name}_input"
+        end
 
-@callback_type  = ($0 =~ /fission-test/) ? 'fission' : 'jackal'
-@callback_class = @callback_type.capitalize
+        def execute!
+          # ensure dependencies are present in Gemfile
+          update_gemfile
+          # Create test directory structure
+          FileUtils.mkdir_p(TEST_DIRS)
 
-# ----------------------------------------------------------------------
-# ensure dependencies are present in Gemfile
-raise 'Ensure Gemfile exists' unless File.exists?('Gemfile')
-gemfile = File.read('Gemfile')
-lines = ["gem 'carnivore-actor'", "gem 'minitest'", "gem 'pry'"]
-lines.select!{ |l| !gemfile[l] } # only append items not already present
+          conf_path = File.join(Dir.pwd, TEST_DIRS, "#{@module_name}.rb")
+          write_file(conf_path, config_file_content)
 
-unless lines.empty?
-  File.open('Gemfile', 'a') do |f|
-    f << "\n"
-    lines.each { |l| f << (l + "\n") }
+          spec_path = File.join(Dir.pwd, 'test/specs', "#{@service_name}_spec.rb")
+          write_file(spec_path, spec_file_content)
+        end
+
+
+        def config_file_content
+          <<-TEXT
+Configuration.new do
+  jackal do
+    require ["carnivore-actor", "jackal-#{@orig_service_name}"]
+
+    mail do
+      config do
+      end
+
+      sources do
+        input  { type 'actor' }
+        output { type 'spec' }
+      end
+
+      callbacks ['Jackal::#{@service_class_name}::#{@module_class_name}']
+    end
   end
 end
+TEXT
+        end
 
-# ----------------------------------------------------------------------
-# Create test directory structure
-FileUtils.mkdir_p(TEST_DIRS)
-
-# ----------------------------------------------------------------------
-# Write out fission config file
-template = File.expand_path("../templates/generator/config.rb.erb", __FILE__)
-conf = ERB.new(File.read(template)).result
-
-conf_file = File.join(Dir.pwd, TEST_DIRS, "#{@module_name}.rb")
-raise 'Config file already exists' if File.exists?(conf_file)
-File.write(conf_file, conf)
-
-# ----------------------------------------------------------------------
-# Write out minitest (via fission-test) spec file scaffold
-
-supervisor_name = (@callback_type == 'fission') ? @service_name : "jackal_#{@service_name}_input"
-spec = <<SPEC
+        def spec_file_content
+          <<TEXT
 require '#{@callback_type}-#{@orig_service_name}'
 require 'pry'
 
 # To stub out an api call for your callback
-class #{@callback_class}::#{@service_class_name}::#{@module_class_name}
+class #{callback_class}::#{@service_class_name}::#{@module_class_name}
   attr_accessor :test_payload
 
   #def api_call(args)
@@ -67,18 +72,18 @@ class #{@callback_class}::#{@service_class_name}::#{@module_class_name}
   #end
 end
 
-describe #{@callback_class}::#{@service_class_name}::#{@module_class_name} do
+describe #{callback_class}::#{@service_class_name}::#{@module_class_name} do
 
   before do
     @runner = run_setup(:#{@module_name})
-    track_execution(#{@callback_class}::#{@service_class_name}::#{@module_class_name})
+    track_execution(#{callback_class}::#{@service_class_name}::#{@module_class_name})
   end
 
   after do
     @runner.terminate
   end
 
-  let(:actor) { Carnivore::Supervisor.supervisor[:#{supervisor_name}] }
+  let(:actor) { Carnivore::Supervisor.supervisor[:#{@supervisor_name}] }
 
   it 'executes with empty payload' do
     result = transmit_and_wait(actor, payload)
@@ -94,9 +99,35 @@ describe #{@callback_class}::#{@service_class_name}::#{@module_class_name} do
   end
 
 end
-SPEC
+TEXT
+        end
 
-filename = "#{@service_name}_spec.rb"
-spec_file = File.join(Dir.pwd, 'test/specs', filename)
-raise 'Spec file already exists' if File.exists?(spec_file)
-File.write(spec_file, spec)
+        private
+
+        def callback_class
+          @callback_class ||= @callback_type.capitalize
+        end
+
+        def update_gemfile
+          raise 'Ensure Gemfile exists' unless File.exists?('Gemfile')
+          gemfile = File.read('Gemfile')
+          lines = ["gem 'carnivore-actor'", "gem 'minitest'", "gem 'pry'"]
+          lines.select!{ |l| !gemfile[l] } # only append items not already present
+
+          unless lines.empty?
+            File.open('Gemfile', 'a') do |f|
+              f << "\n"
+              lines.each { |l| f << (l + "\n") }
+            end
+          end
+        end
+
+        def write_file(path, content)
+          raise "Config file (#{path}) already exists" if File.exists?(path)
+          File.write(path, content)
+        end
+
+      end
+    end
+  end
+end
