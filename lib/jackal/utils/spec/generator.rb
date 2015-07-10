@@ -8,15 +8,15 @@ module Jackal
       class Generator < Bogo::Cli::Command
         TEST_DIRS = 'test/specs/config'
 
-        def initialize(opts, args)
+        def initialize(orig_opts, _)
           super
 
-          @orig_service_name = opts[:service_name]
-          @service_name = @orig_service_name.gsub(/-/, '_')
+          @orig_service_name = orig_opts[:"service-name"]
+          @service_name = Bogo::Utility.snake(@orig_service_name)
           @service_class_name = @service_name.split('_').map(&:capitalize).join
 
-          @module_name = opts[:module_name]
-          @module_class_name = @module_name.capitalize
+          @module_name = orig_opts[:"module-name"]
+          @module_class_name = Bogo::Utility.camel(@module_name)
 
           @callback_type   = 'jackal'
           @supervisor_name = "jackal_#{@service_name}_input"
@@ -105,7 +105,7 @@ TEXT
         private
 
         def callback_class
-          @callback_class ||= @callback_type.capitalize
+          @callback_class ||= Bogo::Utility.camel(@callback_type)
         end
 
         def update_gemfile
