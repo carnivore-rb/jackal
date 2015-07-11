@@ -8,14 +8,14 @@ module Jackal
       class Generator < Bogo::Cli::Command
         TEST_DIRS = 'test/specs/config'
 
-        def initialize(orig_opts, _)
+        def initialize(*_)
           super
 
-          @orig_service_name = orig_opts[:"service-name"]
+          @orig_service_name = options[:service_name]
           @service_name = Bogo::Utility.snake(@orig_service_name)
-          @service_class_name = @service_name.split('_').map(&:capitalize).join
+          @service_class_name = Bogo::Utility.camel(@service_name)
 
-          @module_name = orig_opts[:"module-name"]
+          @module_name = options[:module_name]
           @module_class_name = Bogo::Utility.camel(@module_name)
 
           @callback_type   = 'jackal'
