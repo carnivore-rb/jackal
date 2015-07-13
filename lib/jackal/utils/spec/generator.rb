@@ -11,11 +11,11 @@ module Jackal
         def initialize(*_)
           super
 
-          @orig_service_name = options[:service_name]
+          @orig_service_name = options[:service_name].downcase
           @service_name = Bogo::Utility.snake(@orig_service_name)
           @service_class_name = Bogo::Utility.camel(@service_name)
 
-          @module_name = options[:module_name]
+          @module_name = options[:module_name].downcase
           @module_class_name = Bogo::Utility.camel(@module_name)
 
           @callback_type   = 'jackal'
