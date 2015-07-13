@@ -5,6 +5,7 @@ module Jackal
     # Testing helpers
     module Spec
       autoload :CallbackLocal, 'jackal/utils/spec/callback_local'
+      autoload :Generator, 'jackal/utils/spec/generator'
 
       class << self
 

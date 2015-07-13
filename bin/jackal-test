@@ -2,4 +2,27 @@
 # -*- mode: ruby -*-
 # -*- encoding: utf-8 -*-
 
-require 'jackal/utils/spec/loader'
+require 'bogo-cli'
+require 'jackal'
+
+# This conditional is necessary since the cli parsing has a no-arg
+#   default of printing the help menu (not able to override the default)
+if ARGV.empty?
+  require 'jackal/utils/spec/loader'
+else
+  Bogo::Cli::Setup.define do
+    global_opts = lambda do
+      on :s, 'service-name=', 'Service to test (Eg: Jackal::Mail::Smtp - mail)'
+      on :m, 'module-name=',  'Module to test  (Eg: Jackal::Mail::Smtp - smtp)'
+    end
+
+    command 'generate' do
+      description 'Generate test boilerplate for jackal-test'
+      self.instance_exec(&global_opts)
+      run do |opts, args|
+        Jackal::Utils::Spec::Generator.new(opts.to_h, args).execute!
+      end
+    end
+  end
+end
+
