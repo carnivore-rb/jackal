@@ -10,7 +10,7 @@ Gem::Specification.new do |s|
   s.description = 'Message processing helper'
   s.require_path = 'lib'
   s.license = 'Apache 2.0'
-  s.add_dependency 'carnivore', '>= 0.3.12', '< 1.0.0'
+  s.add_dependency 'carnivore', '>= 0.3.14', '< 1.0.0'
   s.add_dependency 'bogo', '>= 0.1.24', '< 1.0.0'
   s.add_dependency 'bogo-cli', '~> 0.1'
   s.add_dependency 'bogo-config', '>= 0.1.12', '< 1.0.0'
