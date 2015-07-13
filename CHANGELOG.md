@@ -1,3 +1,7 @@
+# v0.3.14
+* Add test scaffold generator
+* Update carnivore constraint
+
 # v0.3.12
 * Set default verbosity to :info
 * Support changing spec runner
