@@ -1,3 +1,6 @@
+# v0.3.16
+* Add `app_host` configuration helper method
+
 # v0.3.14
 * Add test scaffold generator
 * Update carnivore constraint
