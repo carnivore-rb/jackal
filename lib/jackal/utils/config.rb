@@ -45,6 +45,11 @@ module Jackal
         )
       end
 
+      # @return [String] name of the host running the application
+      def app_host
+        app_config.fetch(:app_host, Socket.gethostname)
+      end
+
       # @return [Smash] service configuration
       def service_config
         Carnivore::Config.get(*config_path) || Smash.new
