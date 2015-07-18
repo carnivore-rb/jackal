@@ -1,3 +1,6 @@
+# v0.3.18
+* Add support for event generation
+
 # v0.3.16
 * Add `app_host` configuration helper method
 
