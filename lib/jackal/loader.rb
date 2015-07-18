@@ -98,6 +98,16 @@ module Jackal
               end
             end
           end
+          if(events_opts = Carnivore::Config.get(:jackal, :events))
+            Carnivore.configure do
+              Carnivore::Source.build(
+                :type => events_opts[:type].to_sym,
+                :args => events_opts.fetch(:args, {}).merge(
+                  :name => :events
+                )
+              )
+            end
+          end
           Jackal::Utils.load_http_hook
           Carnivore.start!
         rescue => e

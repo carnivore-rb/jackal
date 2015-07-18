@@ -1,12 +1,17 @@
 {
   "jackal": {
-    "require": []
+    "events": {
+      "type": "spec"
+    },
+    "require": [
+      "carnivore-actor"
+    ]
   },
   "test_namespace": {
     "worker": {
       "sources": {
         "input": {
-          "type": "spec"
+          "type": "actor"
         },
         "output": {
           "type": "spec"

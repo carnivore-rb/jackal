@@ -16,6 +16,7 @@ module Jackal
     autoload :Constants, 'jackal/utils/constants'
     autoload :HttpApi, 'jackal/utils/http_api'
     autoload :Process, 'jackal/utils/process'
+    autoload :Events, 'jackal/utils/events'
 
     extend Payload
     extend Constants

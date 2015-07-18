@@ -7,8 +7,10 @@ module Jackal
 
     include Utils::Payload
     include Utils::Config
+    include Utils::Events
     # @!parse include Jackal::Utils::Payload
     # @!parse include Jackal::Utils::Config
+    # @!parse include Jackal::Utils::Events
 
     include Bogo::Constants
     include Bogo::Memoization
