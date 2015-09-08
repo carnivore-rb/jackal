@@ -29,7 +29,7 @@ module Jackal
           Carnivore::Config.fetch(:verbosity, default_verbosity)
         ).to_s.upcase
 
-        Celluloid.logger.level = Celluloid.logger.class.const_get(const)
+        Zoidberg.logger.level = Zoidberg.logger.class.const_get(const)
         true
       end
 
