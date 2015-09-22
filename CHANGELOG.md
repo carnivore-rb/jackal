@@ -1,3 +1,6 @@
+# v0.5.0
+* Updates to support Carnivore 1.0 (removal of celluloid deps)
+
 # v0.3.18
 * Add support for event generation
 
