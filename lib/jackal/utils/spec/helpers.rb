@@ -1,7 +1,7 @@
 require 'multi_json'
 require 'carnivore/spec_helper'
 
-Carnivore.logger.level = ENV['DEBUG'] ? 0 : 4
+Carnivore::Logger.level = ENV['DEBUG'] ? 0 : 4
 
 # Default source setup higher than base carivore default
 unless(ENV['CARNIVORE_SOURCE_SETUP'])
