@@ -2,7 +2,6 @@ require 'carnivore'
 require 'bogo-config'
 
 module Jackal
-  autoload :Cli, 'jackal/cli'
   autoload :Callback, 'jackal/callback'
   autoload :Error, 'jackal/error'
   autoload :Formatter, 'jackal/formatter'
