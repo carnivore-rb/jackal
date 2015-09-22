@@ -15,7 +15,7 @@ module Jackal
       def new_payload(name, payload, *args)
         Smash.new(
           :name => name,
-          :id => Celluloid.uuid,
+          :id => Carnivore.uuid,
           :data => payload
         )
       end
