@@ -86,14 +86,21 @@ module Jackal
     # @return [Object]
     def failure_wrap(message)
       abort 'Failure wrap requires block for execution' unless block_given?
-      begin
+      if(app_config[:failure_wrap] == false || service_config[:failure_wrap] == false)
+        debug "Processing message with failure wrap disabled <#{message}>"
         payload = unpack(message)
         yield payload
-      rescue => e
-        error "!!! Unexpected failure encountered -> #{e.class}: #{e}"
-        debug "#{e.class}: #{e}\n#{(e.backtrace || []).join("\n")}"
-        payload.set(:error, "#{e.class}: #{e.message}")
-        failed(payload, message, e.message)
+      else
+        debug "Processing message with failure wrap enabled <#{message}>"
+        begin
+          payload = unpack(message)
+          yield payload
+        rescue => e
+          error "!!! Unexpected failure encountered -> #{e.class}: #{e}"
+          debug "#{e.class}: #{e}\n#{(e.backtrace || []).join("\n")}"
+          payload.set(:error, "#{e.class}: #{e.message}")
+          failed(payload, message, e.message)
+        end
       end
     end
 
